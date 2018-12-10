@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TetrisGameLogic", "TetrisGame\TetrisGameLogic.csproj", "{48279679-7979-4026-8621-0424897CE340}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TetrisWinforms", "TetrisWinforms\TetrisWinforms.csproj", "{19203E2F-BE0E-4F16-BC01-E77119CEAC06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48279679-7979-4026-8621-0424897CE340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48279679-7979-4026-8621-0424897CE340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48279679-7979-4026-8621-0424897CE340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48279679-7979-4026-8621-0424897CE340}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19203E2F-BE0E-4F16-BC01-E77119CEAC06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19203E2F-BE0E-4F16-BC01-E77119CEAC06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19203E2F-BE0E-4F16-BC01-E77119CEAC06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19203E2F-BE0E-4F16-BC01-E77119CEAC06}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2BB37C24-0DCC-4DE0-9CD0-143CFB17AC56}
+	EndGlobalSection
+EndGlobal
