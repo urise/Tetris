@@ -9,7 +9,8 @@ namespace TetrisGameLogic
     public enum TetrisCellState
     {
         Empty,
-        Full
+        Falling,
+        Static
     }
 
     public class TetrisCell

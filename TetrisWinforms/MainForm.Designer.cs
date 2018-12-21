@@ -28,9 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panelRight = new System.Windows.Forms.Panel();
+            this.txtLog = new System.Windows.Forms.RichTextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.panelLeft = new System.Windows.Forms.Panel();
             this.pictureGame = new System.Windows.Forms.PictureBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.panelRight.SuspendLayout();
             this.panelLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureGame)).BeginInit();
             this.SuspendLayout();
@@ -38,20 +43,43 @@
             // panelRight
             // 
             this.panelRight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelRight.Controls.Add(this.txtLog);
+            this.panelRight.Controls.Add(this.button1);
             this.panelRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panelRight.Location = new System.Drawing.Point(557, 0);
+            this.panelRight.Location = new System.Drawing.Point(400, 0);
             this.panelRight.Name = "panelRight";
-            this.panelRight.Size = new System.Drawing.Size(304, 685);
+            this.panelRight.Size = new System.Drawing.Size(461, 685);
             this.panelRight.TabIndex = 0;
+            // 
+            // txtLog
+            // 
+            this.txtLog.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.txtLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.txtLog.Location = new System.Drawing.Point(0, 89);
+            this.txtLog.Name = "txtLog";
+            this.txtLog.Size = new System.Drawing.Size(459, 594);
+            this.txtLog.TabIndex = 1;
+            this.txtLog.Text = "";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(216, 25);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // panelLeft
             // 
+            this.panelLeft.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelLeft.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelLeft.Controls.Add(this.pictureGame);
-            this.panelLeft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelLeft.Location = new System.Drawing.Point(0, 0);
             this.panelLeft.Name = "panelLeft";
-            this.panelLeft.Size = new System.Drawing.Size(557, 685);
+            this.panelLeft.Size = new System.Drawing.Size(320, 685);
             this.panelLeft.TabIndex = 1;
             // 
             // pictureGame
@@ -59,10 +87,15 @@
             this.pictureGame.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureGame.Location = new System.Drawing.Point(0, 0);
             this.pictureGame.Name = "pictureGame";
-            this.pictureGame.Size = new System.Drawing.Size(555, 683);
+            this.pictureGame.Size = new System.Drawing.Size(318, 683);
             this.pictureGame.TabIndex = 0;
             this.pictureGame.TabStop = false;
+            this.pictureGame.Click += new System.EventHandler(this.pictureGame_Click);
             this.pictureGame.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureGame_Paint);
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // MainForm
             // 
@@ -75,6 +108,7 @@
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
+            this.panelRight.ResumeLayout(false);
             this.panelLeft.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureGame)).EndInit();
             this.ResumeLayout(false);
@@ -86,6 +120,9 @@
         private System.Windows.Forms.Panel panelRight;
         private System.Windows.Forms.Panel panelLeft;
         private System.Windows.Forms.PictureBox pictureGame;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.RichTextBox txtLog;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
