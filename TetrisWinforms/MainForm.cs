@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,8 @@ namespace TetrisWinforms
         {
             var startOptions = new TetrisStartOptions();
             _game = new TetrisGame(startOptions);
+            var lines = File.ReadAllLines(@"E:\Work\Tetris\TetrisWinforms\Shapes\01.shp");
+            var shapeTurns = new TetrisShapeTurns(lines);
             PrepareControls();
         }
 
