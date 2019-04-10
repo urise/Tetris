@@ -27,10 +27,12 @@ namespace TetrisWinforms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            var startOptions = new TetrisStartOptions();
+            var shapeLibrary = new TetrisShapeLibrary(@"d:\Work\Tetris\TetrisWinforms\Shapes");
+            var startOptions = new TetrisStartOptions
+            {
+                ShapeLibrary = shapeLibrary
+            };
             _game = new TetrisGame(startOptions);
-            var lines = File.ReadAllLines(@"E:\Work\Tetris\TetrisWinforms\Shapes\01.shp");
-            var shapeTurns = new TetrisShapeTurns(lines);
             PrepareControls();
         }
 

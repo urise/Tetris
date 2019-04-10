@@ -14,7 +14,7 @@ namespace TetrisGameLogic
         public TetrisGame(TetrisStartOptions startOptions)
         {
             _startOptions = startOptions;
-            Matrix = new TetrisMatrix(_startOptions.MatrixWidth, _startOptions.MatrixHeight);
+            Matrix = new TetrisMatrix(_startOptions.MatrixWidth, _startOptions.MatrixHeight, _startOptions.ShapeLibrary);
         }
     }
 }

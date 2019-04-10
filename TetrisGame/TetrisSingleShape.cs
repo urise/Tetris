@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace TetrisGameLogic
 {
-    public class TetrisShape
+    public class TetrisSingleShape
     {
         private bool[,] _cells;
 
         public int Size { get; private set; }
         
-        public TetrisShape(List<string> lines)
+        public TetrisSingleShape(List<string> lines)
         {
             ValidateLines(lines);
 
@@ -37,6 +37,11 @@ namespace TetrisGameLogic
                     throw new ArgumentException($"Lines[{i}].Length is equal to {lines[i].Length}, but should be equal to {lines.Count}");
                 }
             }
+        }
+
+        public bool IsFull(int x, int y)
+        {
+            return _cells[x, y];
         }
     }
 }

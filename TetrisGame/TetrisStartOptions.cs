@@ -10,5 +10,6 @@ namespace TetrisGameLogic
     {
         public int MatrixWidth { get; set; } = 10;
         public int MatrixHeight { get; set; } = 20;
+        public ITetrisShapeLibrary ShapeLibrary { get; set; }
     }
 }

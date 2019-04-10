@@ -44,13 +44,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ITetrisShapeLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TetrisCell.cs" />
     <Compile Include="TetrisConstants.cs" />
+    <Compile Include="TetrisCoords.cs" />
     <Compile Include="TetrisGameState.cs" />
     <Compile Include="TetrisGame.cs" />
     <Compile Include="TetrisMatrix.cs" />
-    <Compile Include="TetrisShape.cs" />
+    <Compile Include="TetrisSingleShape.cs" />
+    <Compile Include="TetrisShapeLibrary.cs" />
     <Compile Include="TetrisShapeTurns.cs" />
     <Compile Include="TetrisStartOptions.cs" />
   </ItemGroup>

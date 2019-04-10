@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace TetrisGameLogic
 {
-    public class TetrisShapeTurns
+    public class TetrisShape
     {
-        private TetrisShape[] _shapes = new TetrisShape[TetrisConstants.TURNS_COUNT];
+        private TetrisSingleShape[] _shapes = new TetrisSingleShape[TetrisConstants.TURNS_COUNT];
 
-        public TetrisShapeTurns()
+        public TetrisShape()
         {
 
         }
 
-        public TetrisShapeTurns(IEnumerable<TetrisShape> shapes)
+        public TetrisShape(IEnumerable<TetrisSingleShape> shapes)
         {
 
         }
 
-        public TetrisShapeTurns(IEnumerable<string> lines)
+        public TetrisShape(IEnumerable<string> lines)
         {
             Init(lines);
         }
@@ -36,15 +36,25 @@ namespace TetrisGameLogic
                 if (size == 0) size = line.Length;
                 if (line.Length != size)
                 {
-                    throw new ArgumentException($"TetrisShapeTurns.Init: wrong line size {line}");
+                    throw new ArgumentException($"TetrisShape.Init: wrong line size {line}");
                 }
                 oneShapeLines.Add(line);
                 if (oneShapeLines.Count == size)
                 {
-                    _shapes[currentIndex++] = new TetrisShape(oneShapeLines);
+                    _shapes[currentIndex++] = new TetrisSingleShape(oneShapeLines);
                     oneShapeLines.Clear();
                 }
             }
+        }
+
+        public TetrisSingleShape Next()
+        {
+            return _shapes[0];
+        }
+
+        public TetrisSingleShape Current()
+        {
+            return _shapes[0];
         }
     }
 }
