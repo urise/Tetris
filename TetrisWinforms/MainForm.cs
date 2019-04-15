@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,7 @@ namespace TetrisWinforms
     {
         private TetrisGame _game;
         private TetrisCanvas _canvas;
+        private Bitmap _backImage; 
 
         public MainForm()
         {
@@ -39,10 +41,15 @@ namespace TetrisWinforms
         private void PrepareControls()
         {
             _canvas = new TetrisCanvas(pictureGame.Height - 4, _game.Matrix.Width, _game.Matrix.Height);
+            
             //panelRight.Width = this.Width - _canvas.WidthPixels - 8;
             panelLeft.Width = _canvas.WidthPixels + 6;
             panelRight.Width = this.Width - panelLeft.Width - 18;
-            _canvas.SetGraphics(pictureGame.CreateGraphics());
+            _backImage = new Bitmap(pictureGame.Width, pictureGame.Height, PixelFormat.Format24bppRgb);
+            _canvas.SetGraphics(Graphics.FromImage(_backImage));
+            //var g = pictureGame.CreateGraphics();
+            //_canvas.SetGraphics(pictureGame.CreateGraphics());
+
             //pictureGame.Width = _canvas.WidthPixels;
             Log($"panelLeft = {panelLeft.Width} : {panelLeft.Height}");
             Log($"panelRight = {panelRight.Width} : {panelRight.Height}");
@@ -56,11 +63,18 @@ namespace TetrisWinforms
         private void DrawTetris()
         {
             _canvas.Draw(_game.Matrix);
+            using (var g = pictureGame.CreateGraphics())
+            {
+                g.DrawImageUnscaled(_backImage, Point.Empty);
+            }
+
+            //pictureGame.Image = _backImage;
         }
 
         private void pictureGame_Paint(object sender, PaintEventArgs e)
         {
             DrawTetris();
+            
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

@@ -16,5 +16,10 @@ namespace TetrisGameLogic
     public class TetrisCell
     {
         public TetrisCellState State { get; set; }
+
+        public override string ToString()
+        {
+            return State.ToString();
+        }
     }
 }

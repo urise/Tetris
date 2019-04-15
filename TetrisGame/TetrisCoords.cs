@@ -8,19 +8,19 @@ namespace TetrisGameLogic
 {
     public class TetrisCoords
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public int Row { get; set; }
+        public int Col { get; set; }
 
-        public TetrisCoords(int x, int y)
+        public TetrisCoords(int row, int col)
         {
-            X = x;
-            Y = y;
+            Row = row;
+            Col = col;
         }
 
-        public void Set(int x, int y)
+        public void Set(int row, int col)
         {
-            X = x;
-            Y = y;
+            Row = row;
+            Col = col;
         }
     }
 }
