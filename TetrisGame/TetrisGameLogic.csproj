@@ -51,6 +51,7 @@
     <Compile Include="TetrisCoords.cs" />
     <Compile Include="TetrisGameState.cs" />
     <Compile Include="TetrisGame.cs" />
+    <Compile Include="TetrisKeys.cs" />
     <Compile Include="TetrisMatrix.cs" />
     <Compile Include="TetrisSingleShape.cs" />
     <Compile Include="TetrisShapeLibrary.cs" />

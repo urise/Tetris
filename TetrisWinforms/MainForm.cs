@@ -102,5 +102,42 @@ namespace TetrisWinforms
             _game.Matrix.Tick();
             DrawTetris();
         }
+
+        private TetrisKeys? GetTetrisKeyByKeyCode(Keys keyCode)
+        {
+            switch (keyCode)
+            {
+                case Keys.Left:
+                    return TetrisKeys.Left;
+                case Keys.Right:
+                    return TetrisKeys.Right;
+                case Keys.Down:
+                    return TetrisKeys.QuickFall;
+                case Keys.Up:
+                    return TetrisKeys.Turn;
+                case Keys.Space:
+                    return TetrisKeys.InstantFall;
+                default:
+                    return null;
+            }
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            var tetrisKey = GetTetrisKeyByKeyCode(e.KeyCode);
+            if (tetrisKey != null)
+            {
+                _game.Matrix.KeyDown((TetrisKeys)tetrisKey);
+            }
+        }
+
+        private void MainForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            var tetrisKey = GetTetrisKeyByKeyCode(e.KeyCode);
+            if (tetrisKey != null)
+            {
+                _game.Matrix.KeyUp((TetrisKeys)tetrisKey);
+            }
+        }
     }
 }

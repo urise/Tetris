@@ -16,7 +16,8 @@ namespace TetrisWinforms
         public int CellSize { get; private set; }
         private Graphics _graphics;
         private Brush _bordersBrush = new SolidBrush(Color.DarkBlue);
-        private Brush _cellBrush = new SolidBrush(Color.DarkGreen);
+        private Brush _fallingBrush = new SolidBrush(Color.DarkGreen);
+        private Brush _staticBrush = new SolidBrush(Color.DarkGray);
         private Brush _backgroundBrush = new SolidBrush(Color.FromArgb(0xFF, 0xFF, 0xBC, 0x00));
         private Pen _linePen = new Pen(Color.Red);
 
@@ -43,9 +44,11 @@ namespace TetrisWinforms
             {
                 for (int col = 0; col < matrix.Width; col++)
                 {
-                    if (matrix.Cell(row, col).State != TetrisCellState.Empty)
+                    var state = matrix.Cell(row, col).State;
+                    if (state != TetrisCellState.Empty)
                     {
-                        _graphics.FillRectangle(_cellBrush, BORDER_WIDTH + col * CellSize, row * CellSize, CellSize, CellSize);
+                        var brush = state == TetrisCellState.Static ? _staticBrush : _fallingBrush;
+                        _graphics.FillRectangle(brush, BORDER_WIDTH + col * CellSize, row * CellSize, CellSize, CellSize);
                     }
                 }
             }

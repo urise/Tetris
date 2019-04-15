@@ -105,10 +105,13 @@
             this.ClientSize = new System.Drawing.Size(861, 685);
             this.Controls.Add(this.panelLeft);
             this.Controls.Add(this.panelRight);
+            this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
             this.panelRight.ResumeLayout(false);
             this.panelLeft.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureGame)).EndInit();

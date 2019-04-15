@@ -11,15 +11,19 @@ namespace TetrisGameLogic
         public int Width { get; private set; }
         public int Height { get; private set; }
         public int FallPeriodMs { get; private set; } = 200;
+        public int MovePeriodMs { get; private set; } = 100;
 
         private TetrisCell[,] _cells;
         private ITetrisShapeLibrary _shapeLibrary;
         private TetrisShape _currentShape;
         private TetrisCoords _shapeCoords = new TetrisCoords(0, 0);
         private Random _random = new Random();
+        private List<TetrisCoords> _fallingCells = new List<TetrisCoords>();
+        private List<TetrisKeys> _pressedKeys = new List<TetrisKeys>();
 
         private DateTime _lastTickTime;
         private DateTime _lastFallTime;
+        private DateTime _lastMoveTime;
 
         public TetrisMatrix(int width, int height, ITetrisShapeLibrary shapeLibrary)
         {
@@ -49,13 +53,20 @@ namespace TetrisGameLogic
         private void PutSingleShape()
         {
             var singleShape = _currentShape.Current();
+            _fallingCells.Clear();
             for (int row = 0; row < singleShape.Size; row++)
             {
                 for (int col = 0; col < singleShape.Size; col++)
                 {
                     if (InBounds(_shapeCoords.Row + row, _shapeCoords.Col + col))
                     {
-                        _cells[_shapeCoords.Row + row, _shapeCoords.Col + col].State = singleShape.IsFull(row, col) ? TetrisCellState.Falling : TetrisCellState.Empty;
+                        var coords = new TetrisCoords(_shapeCoords.Row + row, _shapeCoords.Col + col);
+                        if (singleShape.IsFull(row, col))
+                        {
+                            _fallingCells.Add(coords);
+                            _cells[coords.Row, coords.Col].State = TetrisCellState.Falling;
+                        }
+                        
                     }
                 }
             }
@@ -80,50 +91,87 @@ namespace TetrisGameLogic
                     ShapeFall();
                     _lastFallTime = _lastFallTime.AddMilliseconds(FallPeriodMs);
                 }
+                if (IsKeyPressed(TetrisKeys.Left) ^ IsKeyPressed(TetrisKeys.Right))
+                {
+                    var timeMoveSpentMs = (now - _lastMoveTime).TotalMilliseconds;
+                    if (timeMoveSpentMs > MovePeriodMs)
+                    {
+                        ShapeMove(IsKeyPressed(TetrisKeys.Left) ? -1 : 1);
+                    }
+                }
             }
             _lastTickTime = now;
         }
 
-        private bool ShapeCanFall()
+        public void KeyDown(TetrisKeys tetrisKey)
         {
-            for (int row = 0; row < Height; row++)
+            _pressedKeys.Add(tetrisKey);
+            switch (tetrisKey)
             {
-                for (int col = 0; col < Width; col++)
-                {
-                    if (_cells[row, col].State != TetrisCellState.Falling) continue;
+                case TetrisKeys.Left:
+                    ShapeMove(-1);
+                    break;
+                case TetrisKeys.Right:
+                    ShapeMove(1);
+                    break;
+            }
+        }
 
-                    if (row == Height - 1) return false;
+        public void KeyUp(TetrisKeys tetrisKey)
+        {
+            _pressedKeys.Remove(tetrisKey);
+        }
+
+        private bool IsKeyPressed(TetrisKeys tetrisKey)
+        {
+            return _pressedKeys.Contains(tetrisKey);
+        }
+
+        private bool ShapeCanMove(int directionVer, int directionHor)
+        {
+            foreach (var coords in _fallingCells)
+            {
+                var row = coords.Row + directionVer;
+                var col = coords.Col + directionHor;
+                if (!InBounds(row, col) || _cells[row, col].State == TetrisCellState.Static)
+                {
+                    return false;
                 }
             }
             return true;
         }
 
-        private void ClearShape()
+        private void TransformShape(TetrisCellState state)
         {
-            for (int row = 0; row < Height; row++)
+            foreach (var coords in _fallingCells)
             {
-                for (int col = 0; col < Width; col++)
-                {
-                    if (_cells[row, col].State == TetrisCellState.Falling)
-                    {
-                        _cells[row, col].State = TetrisCellState.Empty;
-                    }
-                }
+                _cells[coords.Row, coords.Col].State = state;
             }
         }
 
         private void ShapeFall()
         {
-            if (ShapeCanFall())
+            if (ShapeCanMove(1, 0))
             {
-                ClearShape();
+                TransformShape(TetrisCellState.Empty);
                 _shapeCoords.Row += 1;
                 PutSingleShape();
             }
             else
             {
-                ClearShape();
+                TransformShape(TetrisCellState.Static);
                 _currentShape = null;
+            }
+        }
+
+        private void ShapeMove(int directionHor)
+        {
+            if (ShapeCanMove(0, directionHor))
+            {
+                TransformShape(TetrisCellState.Empty);
+                _shapeCoords.Col += directionHor;
+                PutSingleShape();
+                _lastMoveTime = DateTime.Now;
             }
         }
     }
