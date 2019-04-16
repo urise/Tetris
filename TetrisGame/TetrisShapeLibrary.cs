@@ -30,7 +30,7 @@ namespace TetrisGameLogic
 
         public TetrisShape GetNextShape()
         {
-            var index = _random.Next(_items.Count - 1);
+            var index = _random.Next(_items.Count);
             return _items[index];
         }
     }

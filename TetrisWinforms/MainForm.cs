@@ -129,6 +129,7 @@ namespace TetrisWinforms
             {
                 _game.Matrix.KeyDown((TetrisKeys)tetrisKey);
             }
+            e.Handled = true;
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
@@ -138,6 +139,7 @@ namespace TetrisWinforms
             {
                 _game.Matrix.KeyUp((TetrisKeys)tetrisKey);
             }
+            e.Handled = true;
         }
     }
 }

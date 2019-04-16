@@ -55,7 +55,7 @@
     <Compile Include="TetrisMatrix.cs" />
     <Compile Include="TetrisSingleShape.cs" />
     <Compile Include="TetrisShapeLibrary.cs" />
-    <Compile Include="TetrisShapeTurns.cs" />
+    <Compile Include="TetrisShape.cs" />
     <Compile Include="TetrisStartOptions.cs" />
   </ItemGroup>
   <ItemGroup>

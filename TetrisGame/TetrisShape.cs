@@ -9,6 +9,7 @@ namespace TetrisGameLogic
     public class TetrisShape
     {
         private TetrisSingleShape[] _shapes = new TetrisSingleShape[TetrisConstants.TURNS_COUNT];
+        private int _currentIndex = 0;
 
         public TetrisShape()
         {
@@ -47,14 +48,20 @@ namespace TetrisGameLogic
             }
         }
 
-        public TetrisSingleShape Next()
+        public TetrisSingleShape SwitchToNext()
         {
-            return _shapes[0];
+            _currentIndex = (_currentIndex + 1) % _shapes.Length;
+            return _shapes[_currentIndex];
         }
 
-        public TetrisSingleShape Current()
+        public TetrisSingleShape GetCurrent()
         {
-            return _shapes[0];
+            return _shapes[_currentIndex];
+        }
+
+        public TetrisSingleShape GetNext()
+        {
+            return _shapes[(_currentIndex + 1) % _shapes.Length];
         }
     }
 }

@@ -10,7 +10,7 @@ namespace TetrisGameLogic
     {
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public int FallPeriodMs { get; private set; } = 200;
+        public int FallPeriodMs { get; private set; } = 500;
         public int MovePeriodMs { get; private set; } = 100;
 
         private TetrisCell[,] _cells;
@@ -52,7 +52,7 @@ namespace TetrisGameLogic
 
         private void PutSingleShape()
         {
-            var singleShape = _currentShape.Current();
+            var singleShape = _currentShape.GetCurrent();
             _fallingCells.Clear();
             for (int row = 0; row < singleShape.Size; row++)
             {
@@ -79,7 +79,7 @@ namespace TetrisGameLogic
             {
                 _currentShape = _shapeLibrary.GetNextShape();
                 _shapeCoords.Set(0, Width / 2 - 2);
-                var singleShape = _currentShape.Next();
+                var singleShape = _currentShape.GetCurrent();
                 PutSingleShape();
                 _lastFallTime = now;
             }
@@ -114,6 +114,12 @@ namespace TetrisGameLogic
                 case TetrisKeys.Right:
                     ShapeMove(1);
                     break;
+                case TetrisKeys.Turn:
+                    TurnShape();
+                    break;
+                case TetrisKeys.InstantFall:
+                    InstantFall();
+                    break;
             }
         }
 
@@ -122,9 +128,44 @@ namespace TetrisGameLogic
             _pressedKeys.Remove(tetrisKey);
         }
 
+        public void InstantFall()
+        {
+            while (ShapeCanMove(1, 0))
+            {
+                ShapeFall();
+            }
+        }
+
+        public void TurnShape()
+        {
+            if (ShapeCanTurn())
+            {
+                TransformShape(TetrisCellState.Empty);
+                _currentShape.SwitchToNext();
+                PutSingleShape();
+            }
+        }
+
         private bool IsKeyPressed(TetrisKeys tetrisKey)
         {
             return _pressedKeys.Contains(tetrisKey);
+        }
+
+        private bool ShapeCanTurn()
+        {
+            var nextShape = _currentShape.GetNext();
+            for (int row = 0; row < nextShape.Size; row++)
+            {
+                for (int col = 0; col < nextShape.Size; col++)
+                {
+                    if (nextShape.IsFull(row, col) && InBounds(_shapeCoords.Row + row, _shapeCoords.Col + col) && 
+                        _cells[_shapeCoords.Row + row, _shapeCoords.Col + col].State == TetrisCellState.Static)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         private bool ShapeCanMove(int directionVer, int directionHor)
@@ -161,6 +202,7 @@ namespace TetrisGameLogic
             {
                 TransformShape(TetrisCellState.Static);
                 _currentShape = null;
+                RemoveFullLines();
             }
         }
 
@@ -172,6 +214,40 @@ namespace TetrisGameLogic
                 _shapeCoords.Col += directionHor;
                 PutSingleShape();
                 _lastMoveTime = DateTime.Now;
+            }
+        }
+
+        private bool LineIsFull(int row)
+        {
+            for (int col = 0; col < Width; col++)
+            {
+                if (_cells[row, col].State != TetrisCellState.Static)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void RemoveLine(int row)
+        {
+            for (int i = row; i > 0; i--)
+            {
+                for (int col = 0; col < Width; col++)
+                {
+                    _cells[i, col].State = _cells[i - 1, col].State == TetrisCellState.Static ? TetrisCellState.Static : TetrisCellState.Empty;
+                }
+            }
+        }
+
+        private void RemoveFullLines()
+        {
+            for (int row = Height - 1; row > 0; row--)
+            {
+                if (LineIsFull(row))
+                {
+                    RemoveLine(row);
+                }
             }
         }
     }
