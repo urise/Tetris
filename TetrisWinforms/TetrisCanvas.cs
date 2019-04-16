@@ -17,7 +17,7 @@ namespace TetrisWinforms
         private Graphics _graphics;
         private Brush _bordersBrush = new SolidBrush(Color.DarkBlue);
         private Brush _fallingBrush = new SolidBrush(Color.DarkGreen);
-        private Brush _staticBrush = new SolidBrush(Color.DarkGray);
+        private Brush _staticBrush = new SolidBrush(Color.FromArgb(0xFF, 0x11, 0x11, 0x11));
         private Brush _backgroundBrush = new SolidBrush(Color.FromArgb(0xFF, 0xFF, 0xBC, 0x00));
         private Pen _linePen = new Pen(Color.Red);
 

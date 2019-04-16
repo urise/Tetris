@@ -242,11 +242,16 @@ namespace TetrisGameLogic
 
         private void RemoveFullLines()
         {
-            for (int row = Height - 1; row > 0; row--)
+            int row = Height - 1;
+            while (row > 0)
             {
                 if (LineIsFull(row))
                 {
                     RemoveLine(row);
+                }
+                else
+                {
+                    row--;
                 }
             }
         }
