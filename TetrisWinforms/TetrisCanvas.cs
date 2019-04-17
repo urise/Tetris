@@ -19,6 +19,8 @@ namespace TetrisWinforms
         private Brush _fallingBrush = new SolidBrush(Color.DarkGreen);
         private Brush _staticBrush = new SolidBrush(Color.FromArgb(0xFF, 0x11, 0x11, 0x11));
         private Brush _backgroundBrush = new SolidBrush(Color.FromArgb(0xFF, 0xFF, 0xBC, 0x00));
+        private Brush _cellsForRemove = new SolidBrush(Color.Purple);
+
         private Pen _linePen = new Pen(Color.Red);
 
         public TetrisCanvas(int heightPixels, int widthCells, int heightCells)
@@ -31,6 +33,25 @@ namespace TetrisWinforms
         public void SetGraphics(Graphics graphics)
         {
             _graphics = graphics;
+        }
+
+        private Brush GetBrushByCell(TetrisCell tetrisCell)
+        {
+            switch (tetrisCell.State)
+            {
+                case TetrisCellState.Falling:
+                    return _fallingBrush;
+                case TetrisCellState.Static:
+                    switch (tetrisCell.CellType)
+                    {
+                        case TetrisCellType.Ordinal:
+                            return _staticBrush;
+                        case TetrisCellType.RemoveForWin:
+                            return _cellsForRemove;
+                    }
+                    break;
+            }
+            return _backgroundBrush;
         }
 
         public void Draw(TetrisMatrix matrix)
@@ -47,7 +68,7 @@ namespace TetrisWinforms
                     var state = matrix.Cell(row, col).State;
                     if (state != TetrisCellState.Empty)
                     {
-                        var brush = state == TetrisCellState.Static ? _staticBrush : _fallingBrush;
+                        var brush = GetBrushByCell(matrix.Cell(row, col));
                         _graphics.FillRectangle(brush, BORDER_WIDTH + col * CellSize, row * CellSize, CellSize, CellSize);
                     }
                 }

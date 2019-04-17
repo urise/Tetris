@@ -35,7 +35,7 @@ namespace TetrisGameLogic
             {
                 for (int col = 0; col < Width; col++)
                 {
-                    _cells[row, col] = new TetrisCell { State = TetrisCellState.Empty };
+                    _cells[row, col] = new TetrisCell();
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace TetrisGameLogic
                         if (singleShape.IsFull(row, col))
                         {
                             _fallingCells.Add(coords);
-                            _cells[coords.Row, coords.Col].State = TetrisCellState.Falling;
+                            _cells[coords.Row, coords.Col].SetState(TetrisCellState.Falling);
                         }
                         
                     }
@@ -105,7 +105,11 @@ namespace TetrisGameLogic
 
         public void KeyDown(TetrisKeys tetrisKey)
         {
-            _pressedKeys.Add(tetrisKey);
+            if (!_pressedKeys.Contains(tetrisKey))
+            {
+                _pressedKeys.Add(tetrisKey);
+            }
+
             switch (tetrisKey)
             {
                 case TetrisKeys.Left:
@@ -143,6 +147,25 @@ namespace TetrisGameLogic
                 TransformShape(TetrisCellState.Empty);
                 _currentShape.SwitchToNext();
                 PutSingleShape();
+            }
+        }
+
+        public void FillWithRemoveForWinCells(int numberOfRows)
+        {
+            for (int i = 0; i < numberOfRows; i++)
+            {
+                for (int col = 0; col < Width; col++)
+                {
+                    var cell = _cells[Height - i - 1, col];
+                    if ((i + col) % 2 == 0)
+                    {
+                        cell.Set(TetrisCellState.Empty, TetrisCellType.Ordinal);
+                    }
+                    else
+                    {
+                        cell.Set(TetrisCellState.Static, TetrisCellType.RemoveForWin);
+                    }
+                }
             }
         }
 
@@ -186,7 +209,7 @@ namespace TetrisGameLogic
         {
             foreach (var coords in _fallingCells)
             {
-                _cells[coords.Row, coords.Col].State = state;
+                _cells[coords.Row, coords.Col].Set(state, TetrisCellType.Ordinal);
             }
         }
 
@@ -235,7 +258,8 @@ namespace TetrisGameLogic
             {
                 for (int col = 0; col < Width; col++)
                 {
-                    _cells[i, col].State = _cells[i - 1, col].State == TetrisCellState.Static ? TetrisCellState.Static : TetrisCellState.Empty;
+                    var newState = _cells[i - 1, col].State == TetrisCellState.Static ? TetrisCellState.Static : TetrisCellState.Empty;
+                    _cells[i, col].Set(newState, TetrisCellType.Ordinal);
                 }
             }
         }
