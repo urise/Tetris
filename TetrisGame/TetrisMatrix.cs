@@ -6,12 +6,21 @@ using System.Threading.Tasks;
 
 namespace TetrisGameLogic
 {
+    public enum GameState
+    {
+        NotStarted,
+        InProgress,
+        Won,
+        Lost
+    }
+
     public class TetrisMatrix
     {
         public int Width { get; private set; }
         public int Height { get; private set; }
         public int FallPeriodMs { get; private set; } = 500;
         public int MovePeriodMs { get; private set; } = 100;
+        public GameState State { get; private set; } = GameState.NotStarted;
 
         private TetrisCell[,] _cells;
         private ITetrisShapeLibrary _shapeLibrary;
@@ -74,33 +83,18 @@ namespace TetrisGameLogic
 
         public void Tick()
         {
-            var now = DateTime.Now;
-            if (_currentShape == null)
+            switch (State)
             {
-                _currentShape = _shapeLibrary.GetNextShape();
-                _shapeCoords.Set(0, Width / 2 - 2);
-                var singleShape = _currentShape.GetCurrent();
-                PutSingleShape();
-                _lastFallTime = now;
+                case GameState.InProgress:
+                    TickInProgress();
+                    break;
+                case GameState.Won:
+                    TickWon();
+                    break;
+                case GameState.Lost:
+                    TickLost();
+                    break;
             }
-            else
-            {
-                var timeSpentMs = (now - _lastFallTime).TotalMilliseconds;
-                if (timeSpentMs > FallPeriodMs)
-                {
-                    ShapeFall();
-                    _lastFallTime = _lastFallTime.AddMilliseconds(FallPeriodMs);
-                }
-                if (IsKeyPressed(TetrisKeys.Left) ^ IsKeyPressed(TetrisKeys.Right))
-                {
-                    var timeMoveSpentMs = (now - _lastMoveTime).TotalMilliseconds;
-                    if (timeMoveSpentMs > MovePeriodMs)
-                    {
-                        ShapeMove(IsKeyPressed(TetrisKeys.Left) ? -1 : 1);
-                    }
-                }
-            }
-            _lastTickTime = now;
         }
 
         public void KeyDown(TetrisKeys tetrisKey)
@@ -108,6 +102,17 @@ namespace TetrisGameLogic
             if (!_pressedKeys.Contains(tetrisKey))
             {
                 _pressedKeys.Add(tetrisKey);
+            }
+
+            if (State == GameState.NotStarted && tetrisKey == TetrisKeys.InstantFall)
+            {
+                State = GameState.InProgress;
+                return;
+            }
+
+            if (State != GameState.InProgress)
+            {
+                return;
             }
 
             switch (tetrisKey)
@@ -169,26 +174,89 @@ namespace TetrisGameLogic
             }
         }
 
+        private void PutNextShape()
+        {
+            _currentShape = _shapeLibrary.GetNextShape();
+            _shapeCoords.Set(0, Width / 2 - 2);
+            var singleShape = _currentShape.GetCurrent();
+            if (ShapeCanBePlaced(singleShape, _shapeCoords))
+            {
+                PutSingleShape();
+            }
+            else
+            {
+                State = GameState.Lost;
+            }
+        }
+
+        private void TickInProgress()
+        {
+            var now = DateTime.Now;
+            if (_currentShape == null)
+            {
+                PutNextShape();
+                _lastFallTime = now;
+            }
+            else
+            {
+                var timeSpentMs = (now - _lastFallTime).TotalMilliseconds;
+                if (timeSpentMs > FallPeriodMs)
+                {
+                    ShapeFall();
+                    _lastFallTime = _lastFallTime.AddMilliseconds(FallPeriodMs);
+                }
+                if (IsKeyPressed(TetrisKeys.Left) ^ IsKeyPressed(TetrisKeys.Right))
+                {
+                    var timeMoveSpentMs = (now - _lastMoveTime).TotalMilliseconds;
+                    if (timeMoveSpentMs > MovePeriodMs)
+                    {
+                        ShapeMove(IsKeyPressed(TetrisKeys.Left) ? -1 : 1);
+                    }
+                }
+            }
+            _lastTickTime = now;
+        }
+
+        private void TickWon()
+        {
+            
+        }
+
+        private void TickLost()
+        {
+
+        }
+
         private bool IsKeyPressed(TetrisKeys tetrisKey)
         {
             return _pressedKeys.Contains(tetrisKey);
         }
 
-        private bool ShapeCanTurn()
+        private bool ShapeCanBePlaced(TetrisSingleShape shape, TetrisCoords coords)
         {
-            var nextShape = _currentShape.GetNext();
-            for (int row = 0; row < nextShape.Size; row++)
+            for (int row = 0; row < shape.Size; row++)
             {
-                for (int col = 0; col < nextShape.Size; col++)
+                for (int col = 0; col < shape.Size; col++)
                 {
-                    if (nextShape.IsFull(row, col) && InBounds(_shapeCoords.Row + row, _shapeCoords.Col + col) && 
-                        _cells[_shapeCoords.Row + row, _shapeCoords.Col + col].State == TetrisCellState.Static)
+                    if (shape.IsFull(row, col) && InBounds(coords.Row + row, coords.Col + col) &&
+                        _cells[coords.Row + row, coords.Col + col].State == TetrisCellState.Static)
                     {
                         return false;
                     }
                 }
             }
             return true;
+        }
+
+        private bool ShapeCanTurn()
+        {
+            if (_currentShape == null)
+            {
+                return false;
+            }
+
+            var nextShape = _currentShape.GetNext();
+            return ShapeCanBePlaced(nextShape, _shapeCoords);
         }
 
         private bool ShapeCanMove(int directionVer, int directionHor)
@@ -278,6 +346,32 @@ namespace TetrisGameLogic
                     row--;
                 }
             }
+            if (IsWon())
+            {
+                State = GameState.Won;
+            }
+        }
+
+        private int GetCellTypeCount(TetrisCellType cellType)
+        {
+            var n = 0;
+
+            for (int row = 0; row < Height; row++)
+            {
+                for (int col = 0; col < Width; col++)
+                {
+                    if (_cells[row, col].CellType == cellType)
+                    {
+                        n++;
+                    }
+                }
+            }
+            return n;
+        }
+
+        private bool IsWon()
+        {
+            return GetCellTypeCount(TetrisCellType.RemoveForWin) == 0;
         }
     }
 }

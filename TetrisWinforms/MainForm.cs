@@ -35,7 +35,7 @@ namespace TetrisWinforms
                 ShapeLibrary = shapeLibrary
             };
             _game = new TetrisGame(startOptions);
-            _game.Matrix.FillWithRemoveForWinCells(6);
+            _game.Matrix.FillWithRemoveForWinCells(1);
             PrepareControls();
         }
 
