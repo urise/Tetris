@@ -29,7 +29,7 @@ namespace TetrisWinforms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            var shapeLibrary = new TetrisShapeLibrary(@"d:\Work\Tetris\TetrisWinforms\Shapes");
+            var shapeLibrary = new TetrisShapeLibrary(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Shapes"));
             var startOptions = new TetrisStartOptions
             {
                 ShapeLibrary = shapeLibrary
