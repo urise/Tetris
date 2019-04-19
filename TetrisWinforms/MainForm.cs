@@ -22,9 +22,6 @@ namespace TetrisWinforms
         public MainForm()
         {
             InitializeComponent();
-
-            //_drawArea = new Bitmap(pictureGame.Size.Width, pictureGame.Size.Height);
-            //pictureGame.Image = _drawArea;
         }
 
         private void MainForm_Load(object sender, EventArgs e)

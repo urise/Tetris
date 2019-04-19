@@ -25,8 +25,9 @@ namespace TetrisWinforms
 
         public TetrisCanvas(int heightPixels, int widthCells, int heightCells)
         {
-            HeightPixels = heightPixels;
-            CellSize = heightPixels / heightCells;
+            CellSize = (heightPixels - BORDER_WIDTH) / heightCells;
+            HeightPixels = CellSize * heightCells + BORDER_WIDTH;
+            
             WidthPixels = CellSize * widthCells + 2 * BORDER_WIDTH;
         }
 
@@ -60,6 +61,8 @@ namespace TetrisWinforms
             _graphics.FillRectangle(_bordersBrush, 0, 0, BORDER_WIDTH, HeightPixels);
             _graphics.FillRectangle(_bordersBrush, 0, HeightPixels - BORDER_WIDTH, WidthPixels, BORDER_WIDTH);
             _graphics.FillRectangle(_bordersBrush, WidthPixels - BORDER_WIDTH, 0, BORDER_WIDTH, HeightPixels);
+            //var gameRectangle = new Rectangle(BORDER_WIDTH, 0, WidthPixels - 2 * BORDER_WIDTH, HeightPixels - BORDER_WIDTH);
+            //_graphics.FillRectangle(new SolidBrush(Color.LightGreen), gameRectangle);
 
             for (int row = 0; row < matrix.Height; row++)
             {
