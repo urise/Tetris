@@ -44,8 +44,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ITetrisMatrix.cs" />
     <Compile Include="ITetrisShapeLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TetrisActions\ITetrisAction.cs" />
+    <Compile Include="TetrisActions\TetrisAction.cs" />
+    <Compile Include="TetrisActions\TetrisFillFromDownAction.cs" />
+    <Compile Include="TetrisActions\TetrisUpDownAction.cs" />
     <Compile Include="TetrisCell.cs" />
     <Compile Include="TetrisConstants.cs" />
     <Compile Include="TetrisCoords.cs" />

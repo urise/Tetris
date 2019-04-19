@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TetrisGameLogic.TetrisActions;
 
 namespace TetrisGameLogic
 {
@@ -14,7 +15,7 @@ namespace TetrisGameLogic
         Lost
     }
 
-    public class TetrisMatrix
+    public class TetrisMatrix : ITetrisMatrix
     {
         public int Width { get; private set; }
         public int Height { get; private set; }
@@ -29,6 +30,8 @@ namespace TetrisGameLogic
         private Random _random = new Random();
         private List<TetrisCoords> _fallingCells = new List<TetrisCoords>();
         private List<TetrisKeys> _pressedKeys = new List<TetrisKeys>();
+        private ITetrisAction _wonAction;
+        private ITetrisAction _lostAction;
 
         private DateTime _lastTickTime;
         private DateTime _lastFallTime;
@@ -47,6 +50,8 @@ namespace TetrisGameLogic
                     _cells[row, col] = new TetrisCell();
                 }
             }
+            _wonAction = new TetrisUpDownAction(this);
+            _lostAction = new TetrisFillFromDownAction(this);
         }
 
         public TetrisCell Cell(int row, int col)
@@ -59,8 +64,27 @@ namespace TetrisGameLogic
             return row >= 0 && row < Height && col >= 0 && col < Width;
         }
 
+        public bool IsEmpty()
+        {
+            for (int row = 0; row < Height; row++)
+            {
+                for (int col = 0; col < Width; col++)
+                {
+                    if (_cells[row, col].State != TetrisCellState.Empty)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         private void PutSingleShape()
         {
+            if (_currentShape == null)
+            {
+                return;
+            }
             var singleShape = _currentShape.GetCurrent();
             _fallingCells.Clear();
             for (int row = 0; row < singleShape.Size; row++)
@@ -219,12 +243,20 @@ namespace TetrisGameLogic
 
         private void TickWon()
         {
-            
+            _wonAction.Tick();
+            if (_wonAction.IsFinished)
+            {
+                State = GameState.NotStarted;
+            }
         }
 
         private void TickLost()
         {
-
+            _lostAction.Tick();
+            if (_wonAction.IsFinished)
+            {
+                State = GameState.NotStarted;
+            }
         }
 
         private bool IsKeyPressed(TetrisKeys tetrisKey)
@@ -322,17 +354,17 @@ namespace TetrisGameLogic
 
         private void RemoveLine(int row)
         {
-            for (int i = row; i > 0; i--)
+            for (int i = row; i >= 0; i--)
             {
                 for (int col = 0; col < Width; col++)
                 {
-                    var newState = _cells[i - 1, col].State == TetrisCellState.Static ? TetrisCellState.Static : TetrisCellState.Empty;
+                    var newState = i > 0 && _cells[i - 1, col].State == TetrisCellState.Static ? TetrisCellState.Static : TetrisCellState.Empty;
                     _cells[i, col].Set(newState, TetrisCellType.Ordinal);
                 }
             }
         }
 
-        private void RemoveFullLines()
+        public void RemoveFullLines()
         {
             int row = Height - 1;
             while (row > 0)
@@ -346,7 +378,7 @@ namespace TetrisGameLogic
                     row--;
                 }
             }
-            if (IsWon())
+            if (State == GameState.InProgress && IsWon())
             {
                 State = GameState.Won;
             }
