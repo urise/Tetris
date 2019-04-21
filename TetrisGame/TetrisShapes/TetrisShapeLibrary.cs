@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TetrisGameLogic
+namespace TetrisGameLogic.TetrisShapes
 {
     public class TetrisShapeLibrary : ITetrisShapeLibrary
     {
-        private List<TetrisShape> _items = new List<TetrisShape>();
+        private List<ITetrisShape> _items = new List<ITetrisShape>();
         private Random _random = new Random();
 
         public TetrisShapeLibrary(string directory)
@@ -28,7 +28,7 @@ namespace TetrisGameLogic
             }
         }
 
-        public TetrisShape GetNextShape()
+        public ITetrisShape GetNextShape()
         {
             var index = _random.Next(_items.Count);
             return _items[index];

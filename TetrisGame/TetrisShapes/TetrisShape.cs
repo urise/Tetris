@@ -4,19 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TetrisGameLogic
+namespace TetrisGameLogic.TetrisShapes
 {
-    public class TetrisShape
+    public class TetrisShape : ITetrisShape
     {
-        private TetrisSingleShape[] _shapes = new TetrisSingleShape[TetrisConstants.TURNS_COUNT];
+        private ITetrisSingleShape[] _shapes = new TetrisSingleShape[TetrisConstants.TURNS_COUNT];
         private int _currentIndex = 0;
 
         public TetrisShape()
-        {
-
-        }
-
-        public TetrisShape(IEnumerable<TetrisSingleShape> shapes)
         {
 
         }
@@ -26,7 +21,7 @@ namespace TetrisGameLogic
             Init(lines);
         }
 
-        public void Init(IEnumerable<string> lines)
+        private void Init(IEnumerable<string> lines)
         {
             var oneShapeLines = new List<string>();
             int size = 0;
@@ -48,18 +43,18 @@ namespace TetrisGameLogic
             }
         }
 
-        public TetrisSingleShape SwitchToNext()
+        public ITetrisSingleShape SwitchToNext()
         {
             _currentIndex = (_currentIndex + 1) % _shapes.Length;
             return _shapes[_currentIndex];
         }
 
-        public TetrisSingleShape GetCurrent()
+        public ITetrisSingleShape GetCurrent()
         {
             return _shapes[_currentIndex];
         }
 
-        public TetrisSingleShape GetNext()
+        public ITetrisSingleShape GetNext()
         {
             return _shapes[(_currentIndex + 1) % _shapes.Length];
         }

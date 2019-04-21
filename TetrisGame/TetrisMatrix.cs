@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TetrisGameLogic.TetrisActions;
+using TetrisGameLogic.TetrisShapes;
 
 namespace TetrisGameLogic
 {
@@ -25,7 +26,7 @@ namespace TetrisGameLogic
 
         private TetrisCell[,] _cells;
         private ITetrisShapeLibrary _shapeLibrary;
-        private TetrisShape _currentShape;
+        private ITetrisShape _currentShape;
         private TetrisCoords _shapeCoords = new TetrisCoords(0, 0);
         private Random _random = new Random();
         private List<TetrisCoords> _fallingCells = new List<TetrisCoords>();
@@ -264,7 +265,7 @@ namespace TetrisGameLogic
             return _pressedKeys.Contains(tetrisKey);
         }
 
-        private bool ShapeCanBePlaced(TetrisSingleShape shape, TetrisCoords coords)
+        private bool ShapeCanBePlaced(ITetrisSingleShape shape, TetrisCoords coords)
         {
             for (int row = 0; row < shape.Size; row++)
             {

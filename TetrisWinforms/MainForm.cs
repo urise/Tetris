@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TetrisGameLogic;
+using TetrisGameLogic.TetrisShapes;
 
 namespace TetrisWinforms
 {
@@ -32,29 +33,27 @@ namespace TetrisWinforms
                 ShapeLibrary = shapeLibrary
             };
             _game = new TetrisGame(startOptions);
-            _game.Matrix.FillWithRemoveForWinCells(1);
+            _game.Matrix.FillWithRemoveForWinCells(10);
             PrepareControls();
         }
 
         private void PrepareControls()
         {
-            _canvas = new TetrisCanvas(pictureGame.Height - 4, _game.Matrix.Width, _game.Matrix.Height);
+            _canvas = new TetrisCanvas(pictureGame.Width, pictureGame.Height, _game.Matrix.Width, _game.Matrix.Height);
             
             //panelRight.Width = this.Width - _canvas.WidthPixels - 8;
-            panelLeft.Width = _canvas.WidthPixels + 6;
-            panelRight.Width = this.Width - panelLeft.Width - 18;
             _backImage = new Bitmap(pictureGame.Width, pictureGame.Height, PixelFormat.Format24bppRgb);
             _canvas.SetGraphics(Graphics.FromImage(_backImage));
             //var g = pictureGame.CreateGraphics();
             //_canvas.SetGraphics(pictureGame.CreateGraphics());
 
             //pictureGame.Width = _canvas.WidthPixels;
-            Log($"panelLeft = {panelLeft.Width} : {panelLeft.Height}");
-            Log($"panelRight = {panelRight.Width} : {panelRight.Height}");
-            Log($"mainForm = {this.Width} : {this.Height}");
-            Log($"pictureGame = {pictureGame.Width} : {pictureGame.Height}");
-            Log($"canvas = {_canvas.WidthPixels} : {_canvas.HeightPixels}");
-            Log($"txtLog = ({txtLog.Left} : {txtLog.Top}; {txtLog.Width} : {txtLog.Height})");
+            //Log($"panelLeft = {panelLeft.Width} : {panelLeft.Height}");
+            //Log($"panelRight = {panelRight.Width} : {panelRight.Height}");
+            //Log($"mainForm = {this.Width} : {this.Height}");
+            //Log($"pictureGame = {pictureGame.Width} : {pictureGame.Height}");
+            //Log($"canvas = {_canvas.WidthPixels} : {_canvas.HeightPixels}");
+            //Log($"txtLog = ({txtLog.Left} : {txtLog.Top}; {txtLog.Width} : {txtLog.Height})");
             timer1.Start();
         }
 
@@ -87,7 +86,7 @@ namespace TetrisWinforms
 
         private void Log(string s)
         {
-            txtLog.AppendText($"{s}\n");
+            //txtLog.AppendText($"{s}\n");
         }
 
         private void pictureGame_Click(object sender, EventArgs e)
@@ -138,6 +137,11 @@ namespace TetrisWinforms
                 _game.Matrix.KeyUp((TetrisKeys)tetrisKey);
             }
             e.Handled = true;
+        }
+
+        private void pictureGame_Resize(object sender, EventArgs e)
+        {
+            PrepareControls();
         }
     }
 }

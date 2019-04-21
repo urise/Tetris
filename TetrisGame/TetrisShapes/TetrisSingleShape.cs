@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TetrisGameLogic
+namespace TetrisGameLogic.TetrisShapes
 {
-    public class TetrisSingleShape
+    public class TetrisSingleShape : ITetrisSingleShape
     {
         private bool[,] _cells;
 
@@ -39,9 +39,9 @@ namespace TetrisGameLogic
             }
         }
 
-        public bool IsFull(int x, int y)
+        public bool IsFull(int row, int col)
         {
-            return _cells[x, y];
+            return _cells[row, col];
         }
     }
 }

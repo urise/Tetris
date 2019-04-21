@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TetrisGameLogic
+namespace TetrisGameLogic.TetrisShapes
 {
     public interface ITetrisShapeLibrary
     {
-        TetrisShape GetNextShape();
+        ITetrisShape GetNextShape();
     }
 }
