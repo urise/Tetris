@@ -24,11 +24,16 @@ namespace TetrisWinforms
         private Brush _backgroundBrush = new SolidBrush(Color.FromArgb(0xFF, 0xFF, 0xBC, 0x00));
         private Brush _cellsForRemove = new SolidBrush(Color.Purple);
         private Brush _cellSeparatorBrush = new SolidBrush(Color.DarkGray);
+        private Brush _scoreBackgroundBrush = new SolidBrush(Color.Azure);
+        private Brush _scoreBrush = new SolidBrush(Color.Black);
+        private Font _scoreFont = new Font("Arial", 22);
         private int _leftWidth;
         private int _rightWidth;
         private Rectangle _leftRectangle;
+        private Rectangle _rightRectangle;
         private Rectangle _gameRectangle;
         private Rectangle _gameRectangleWithBorders;
+        private Rectangle _scoreRectangle;
 
         private Pen _linePen = new Pen(Color.Red);
 
@@ -37,6 +42,7 @@ namespace TetrisWinforms
             _leftWidth = (widthPixels - CENTRAL_SEPARATOR_WIDTH) / 2;
             _rightWidth = widthPixels - CENTRAL_SEPARATOR_WIDTH - _leftWidth;
             _leftRectangle = new Rectangle(0, 0, _leftWidth, heightPixels);
+            _rightRectangle = new Rectangle(_leftWidth + CENTRAL_SEPARATOR_WIDTH, 0, _rightWidth, heightPixels);
 
             int cellSizeByWidth = (_leftRectangle.Width - BORDER_WIDTH * 2 - CELL_SEPARATOR_SIZE * (widthCells - 1)) / widthCells;
             int cellSizeByHeight = (_leftRectangle.Height - BORDER_HEIGHT - CELL_SEPARATOR_SIZE * (heightCells - 1)) / heightCells;
@@ -49,6 +55,8 @@ namespace TetrisWinforms
             var gb = _gameRectangleWithBorders;
             _gameRectangle = new Rectangle(gb.Left + BORDER_WIDTH, gb.Top, gb.Width - BORDER_WIDTH * 2, gb.Height - BORDER_HEIGHT);
 
+            var r = _rightRectangle;
+            _scoreRectangle = new Rectangle(r.Left + BORDER_WIDTH, r.Top + BORDER_HEIGHT, r.Width - BORDER_WIDTH * 2, 50);
         }
 
         public void SetGraphics(Graphics graphics)
@@ -106,6 +114,18 @@ namespace TetrisWinforms
                     _graphics.FillRectangle(_cellSeparatorBrush, g.Left, g.Top + row * CellSize + (row - 1) * CELL_SEPARATOR_SIZE, g.Width, CELL_SEPARATOR_SIZE);
                 }
             }
+
+            DrawScore(matrix.Score);
+            
+        }
+
+        private void DrawScore(int score)
+        {
+            _graphics.FillRectangle(_scoreBackgroundBrush, _scoreRectangle);
+            var size = _graphics.MeasureString(score.ToString(), _scoreFont);
+            _graphics.DrawString(score.ToString(), _scoreFont, _scoreBrush, 
+                _scoreRectangle.Left + (_scoreRectangle.Width - size.Width) / 2, 
+                _scoreRectangle.Top + (_scoreRectangle.Height - size.Height) / 2, new StringFormat());
         }
 
         private void DrawBorders()

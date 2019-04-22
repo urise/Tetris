@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TetrisGameLogic.TetrisActions;
+using TetrisGameLogic.TetrisScore;
 using TetrisGameLogic.TetrisShapes;
 
 namespace TetrisGameLogic
@@ -23,6 +24,7 @@ namespace TetrisGameLogic
         public int FallPeriodMs { get; private set; } = 500;
         public int MovePeriodMs { get; private set; } = 100;
         public GameState State { get; private set; } = GameState.NotStarted;
+        public int Score => _scoreCounter.Value;
 
         private TetrisCell[,] _cells;
         private ITetrisShapeLibrary _shapeLibrary;
@@ -33,6 +35,7 @@ namespace TetrisGameLogic
         private List<TetrisKeys> _pressedKeys = new List<TetrisKeys>();
         private ITetrisAction _wonAction;
         private ITetrisAction _lostAction;
+        private ITetrisScoreCounter _scoreCounter = new TetrisScoreCounter(); 
 
         private DateTime _lastTickTime;
         private DateTime _lastFallTime;
@@ -367,18 +370,25 @@ namespace TetrisGameLogic
 
         public void RemoveFullLines()
         {
+            int counter = 0;
             int row = Height - 1;
             while (row > 0)
             {
                 if (LineIsFull(row))
                 {
                     RemoveLine(row);
+                    counter++;
                 }
                 else
                 {
                     row--;
                 }
             }
+            if (State == GameState.InProgress && counter > 0)
+            {
+                _scoreCounter.ProcessEvent((TetrisScoreEvents)counter);
+            }
+
             if (State == GameState.InProgress && IsWon())
             {
                 State = GameState.Won;

@@ -57,6 +57,8 @@
     <Compile Include="TetrisGame.cs" />
     <Compile Include="TetrisKeys.cs" />
     <Compile Include="TetrisMatrix.cs" />
+    <Compile Include="TetrisScore\ITetrisScoreCounter.cs" />
+    <Compile Include="TetrisScore\TetrisScoreCounter.cs" />
     <Compile Include="TetrisShapes\ITetrisShape.cs" />
     <Compile Include="TetrisShapes\ITetrisShapeLibrary.cs" />
     <Compile Include="TetrisShapes\ITetrisSingleShape.cs" />

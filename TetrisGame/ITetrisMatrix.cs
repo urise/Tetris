@@ -13,5 +13,6 @@ namespace TetrisGameLogic
         TetrisCell Cell(int row, int col);
         void RemoveFullLines();
         bool IsEmpty();
+        int Score { get; }
     }
 }
