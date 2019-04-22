@@ -6,27 +6,20 @@ using System.Text;
 using System.Threading.Tasks;
 using TetrisGameLogic;
 
-namespace TetrisWinforms
+namespace TetrisWinforms.Canvases
 {
     public class TetrisCanvas: IDisposable
     {
         public const int BORDER_WIDTH = 5;
         public const int BORDER_HEIGHT = 5;
         public const int CENTRAL_SEPARATOR_WIDTH = 10;
+        public const int HOR_SEPARATOR_HEIGHT = 10;
         public const int CELL_SEPARATOR_SIZE = 3;
-        //public int WidthPixels { get; private set; }
-        //public int HeightPixels { get; private set; }
+        public const int SCORE_HEIGHT = 50;
+        public const int PREDICTION_HEIGHT = 80;
         public int CellSize { get; private set; }
         private Graphics _graphics;
-        private Brush _bordersBrush = new SolidBrush(Color.DarkBlue);
-        private Brush _fallingBrush = new SolidBrush(Color.DarkGreen);
-        private Brush _staticBrush = new SolidBrush(Color.FromArgb(0xFF, 0x11, 0x11, 0x11));
-        private Brush _backgroundBrush = new SolidBrush(Color.FromArgb(0xFF, 0xFF, 0xBC, 0x00));
-        private Brush _cellsForRemove = new SolidBrush(Color.Purple);
-        private Brush _cellSeparatorBrush = new SolidBrush(Color.DarkGray);
-        private Brush _scoreBackgroundBrush = new SolidBrush(Color.Azure);
-        private Brush _scoreBrush = new SolidBrush(Color.Black);
-        private Font _scoreFont = new Font("Arial", 22);
+        
         private int _leftWidth;
         private int _rightWidth;
         private Rectangle _leftRectangle;
@@ -34,6 +27,9 @@ namespace TetrisWinforms
         private Rectangle _gameRectangle;
         private Rectangle _gameRectangleWithBorders;
         private Rectangle _scoreRectangle;
+        private Rectangle _predictionRectangle;
+        private TetrisCanvasOptions _options = TetrisCanvasOptions.Instance;
+        private TetrisPredictionCanvas _predictionCanvas;
 
         private Pen _linePen = new Pen(Color.Red);
 
@@ -56,7 +52,13 @@ namespace TetrisWinforms
             _gameRectangle = new Rectangle(gb.Left + BORDER_WIDTH, gb.Top, gb.Width - BORDER_WIDTH * 2, gb.Height - BORDER_HEIGHT);
 
             var r = _rightRectangle;
-            _scoreRectangle = new Rectangle(r.Left + BORDER_WIDTH, r.Top + BORDER_HEIGHT, r.Width - BORDER_WIDTH * 2, 50);
+            _scoreRectangle = new Rectangle(r.Left + BORDER_WIDTH, r.Top + BORDER_HEIGHT, r.Width - BORDER_WIDTH * 2, SCORE_HEIGHT);
+            _predictionRectangle = new Rectangle(
+                r.Left + BORDER_WIDTH, 
+                r.Top + BORDER_HEIGHT + _scoreRectangle.Height + HOR_SEPARATOR_HEIGHT,
+                r.Width - BORDER_WIDTH * 2, 
+                PREDICTION_HEIGHT);
+            _predictionCanvas = new TetrisPredictionCanvas(_predictionRectangle);
         }
 
         public void SetGraphics(Graphics graphics)
@@ -69,27 +71,27 @@ namespace TetrisWinforms
             switch (tetrisCell.State)
             {
                 case TetrisCellState.Falling:
-                    return _fallingBrush;
+                    return _options.FallingBrush;
                 case TetrisCellState.Static:
                     switch (tetrisCell.CellType)
                     {
                         case TetrisCellType.Ordinal:
-                            return _staticBrush;
+                            return _options.StaticBrush;
                         case TetrisCellType.RemoveForWin:
-                            return _cellsForRemove;
+                            return _options.CellsForRemoveBrush;
                     }
                     break;
             }
-            return _backgroundBrush;
+            return _options.BackgroundBrush;
         }
 
         public void Draw(TetrisMatrix matrix)
         {
             var gb = _gameRectangleWithBorders;
-            _graphics.FillRectangle(_backgroundBrush, gb);
-            _graphics.FillRectangle(_bordersBrush, gb.Left, gb.Top, BORDER_WIDTH, gb.Height);
-            _graphics.FillRectangle(_bordersBrush, gb.Left, gb.Bottom - BORDER_HEIGHT, gb.Width, BORDER_HEIGHT);
-            _graphics.FillRectangle(_bordersBrush, gb.Right - BORDER_WIDTH, gb.Top, BORDER_WIDTH, gb.Height);
+            _graphics.FillRectangle(_options.BackgroundBrush, gb);
+            _graphics.FillRectangle(_options.BordersBrush, gb.Left, gb.Top, BORDER_WIDTH, gb.Height);
+            _graphics.FillRectangle(_options.BordersBrush, gb.Left, gb.Bottom - BORDER_HEIGHT, gb.Width, BORDER_HEIGHT);
+            _graphics.FillRectangle(_options.BordersBrush, gb.Right - BORDER_WIDTH, gb.Top, BORDER_WIDTH, gb.Height);
             //var gameRectangle = new Rectangle(BORDER_WIDTH, 0, WidthPixels - 2 * BORDER_WIDTH, HeightPixels - BORDER_WIDTH);
             //_graphics.FillRectangle(new SolidBrush(Color.LightGreen), gameRectangle);
 
@@ -106,12 +108,12 @@ namespace TetrisWinforms
                     }
                     if (col > 0)
                     {
-                        _graphics.FillRectangle(_cellSeparatorBrush, g.Left + col * CellSize + (col - 1) * CELL_SEPARATOR_SIZE, g.Top, CELL_SEPARATOR_SIZE, g.Bottom);
+                        _graphics.FillRectangle(_options.CellSeparatorBrush, g.Left + col * CellSize + (col - 1) * CELL_SEPARATOR_SIZE, g.Top, CELL_SEPARATOR_SIZE, g.Bottom);
                     }
                 }
                 if (row > 0)
                 {
-                    _graphics.FillRectangle(_cellSeparatorBrush, g.Left, g.Top + row * CellSize + (row - 1) * CELL_SEPARATOR_SIZE, g.Width, CELL_SEPARATOR_SIZE);
+                    _graphics.FillRectangle(_options.CellSeparatorBrush, g.Left, g.Top + row * CellSize + (row - 1) * CELL_SEPARATOR_SIZE, g.Width, CELL_SEPARATOR_SIZE);
                 }
             }
 
@@ -121,9 +123,9 @@ namespace TetrisWinforms
 
         private void DrawScore(int score)
         {
-            _graphics.FillRectangle(_scoreBackgroundBrush, _scoreRectangle);
-            var size = _graphics.MeasureString(score.ToString(), _scoreFont);
-            _graphics.DrawString(score.ToString(), _scoreFont, _scoreBrush, 
+            _graphics.FillRectangle(_options.ScoreBackgroundBrush, _scoreRectangle);
+            var size = _graphics.MeasureString(score.ToString(), _options.ScoreFont);
+            _graphics.DrawString(score.ToString(), _options.ScoreFont, _options.ScoreBrush, 
                 _scoreRectangle.Left + (_scoreRectangle.Width - size.Width) / 2, 
                 _scoreRectangle.Top + (_scoreRectangle.Height - size.Height) / 2, new StringFormat());
         }
@@ -135,7 +137,6 @@ namespace TetrisWinforms
 
         public void Dispose()
         {
-            _bordersBrush.Dispose();
             _graphics.Dispose();
         }
     }

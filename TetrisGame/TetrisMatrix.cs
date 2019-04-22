@@ -28,9 +28,9 @@ namespace TetrisGameLogic
 
         private TetrisCell[,] _cells;
         private ITetrisShapeLibrary _shapeLibrary;
+        private ITetrisPredictionShapes _predictions;
         private ITetrisShape _currentShape;
         private TetrisCoords _shapeCoords = new TetrisCoords(0, 0);
-        private Random _random = new Random();
         private List<TetrisCoords> _fallingCells = new List<TetrisCoords>();
         private List<TetrisKeys> _pressedKeys = new List<TetrisKeys>();
         private ITetrisAction _wonAction;
@@ -46,6 +46,7 @@ namespace TetrisGameLogic
             Width = width;
             Height = height;
             _shapeLibrary = shapeLibrary;
+            _predictions = new TetrisPredictionShapes(_shapeLibrary);
             _cells = new TetrisCell[Height, Width];
             for (int row = 0; row < Height; row++)
             {
@@ -91,9 +92,9 @@ namespace TetrisGameLogic
             }
             var singleShape = _currentShape.GetCurrent();
             _fallingCells.Clear();
-            for (int row = 0; row < singleShape.Size; row++)
+            for (int row = 0; row < singleShape.FullSize; row++)
             {
-                for (int col = 0; col < singleShape.Size; col++)
+                for (int col = 0; col < singleShape.FullSize; col++)
                 {
                     if (InBounds(_shapeCoords.Row + row, _shapeCoords.Col + col))
                     {
@@ -270,9 +271,9 @@ namespace TetrisGameLogic
 
         private bool ShapeCanBePlaced(ITetrisSingleShape shape, TetrisCoords coords)
         {
-            for (int row = 0; row < shape.Size; row++)
+            for (int row = 0; row < shape.FullSize; row++)
             {
-                for (int col = 0; col < shape.Size; col++)
+                for (int col = 0; col < shape.FullSize; col++)
                 {
                     if (shape.IsFull(row, col) && InBounds(coords.Row + row, coords.Col + col) &&
                         _cells[coords.Row + row, coords.Col + col].State == TetrisCellState.Static)

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TetrisGameLogic.TetrisShapes
 {
-    public interface ITetrisSingleShape
+    public interface ITetrisPredictionShapes
     {
-        bool IsFull(int row, int col);
-        int FullSize { get; }
+        void Next();
+        List<ITetrisSingleShape> GetPredictions(int count);
     }
 }

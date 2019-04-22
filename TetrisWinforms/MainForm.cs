@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TetrisGameLogic;
 using TetrisGameLogic.TetrisShapes;
+using TetrisWinforms.Canvases;
 
 namespace TetrisWinforms
 {

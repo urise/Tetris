@@ -10,18 +10,20 @@ namespace TetrisGameLogic.TetrisShapes
     {
         private bool[,] _cells;
 
-        public int Size { get; private set; }
+        public int FullSize { get; private set; }
+        public int RealSizeVer { get; private set; }
+        public int RealSizeHor { get; private set; }
         
         public TetrisSingleShape(List<string> lines)
         {
             ValidateLines(lines);
 
-            Size = lines.Count;
-            _cells = new bool[Size, Size];
+            FullSize = lines.Count;
+            _cells = new bool[FullSize, FullSize];
 
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < FullSize; i++)
             {
-                for (int j = 0; j < Size; j++)
+                for (int j = 0; j < FullSize; j++)
                 {
                     _cells[i, j] = lines[i][j] == 'X';
                 }
