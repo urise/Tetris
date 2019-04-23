@@ -11,6 +11,8 @@ namespace TetrisGameLogic.TetrisShapes
         private ITetrisSingleShape[] _shapes = new TetrisSingleShape[TetrisConstants.TURNS_COUNT];
         private int _currentIndex = 0;
 
+        public int SquareCount => _shapes[0].SquareCount;
+
         public TetrisShape()
         {
 

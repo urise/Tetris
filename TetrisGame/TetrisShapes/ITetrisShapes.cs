@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace TetrisGameLogic.TetrisShapes
 {
-    public interface ITetrisSingleShape
+    public interface ITetrisShapes
     {
-        bool IsFull(int row, int col);
-        int FullSize { get; }
-        int SquareCount { get; }
+        void Add(ITetrisShape shape);
+        IEnumerable<int> GetSquareNumbers();
+        List<ITetrisShape> GetList(int cnt = 0);
     }
 }

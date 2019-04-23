@@ -13,6 +13,7 @@ namespace TetrisGameLogic.TetrisShapes
         public int FullSize { get; private set; }
         public int RealSizeVer { get; private set; }
         public int RealSizeHor { get; private set; }
+        public int SquareCount { get; private set; }
         
         public TetrisSingleShape(List<string> lines)
         {
@@ -26,6 +27,7 @@ namespace TetrisGameLogic.TetrisShapes
                 for (int j = 0; j < FullSize; j++)
                 {
                     _cells[i, j] = lines[i][j] == 'X';
+                    SquareCount += _cells[i, j] ? 1 : 0;
                 }
             }
         }
