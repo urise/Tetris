@@ -25,10 +25,10 @@ namespace TetrisGameLogic
         public int MovePeriodMs { get; private set; } = 100;
         public GameState State { get; private set; } = GameState.NotStarted;
         public int Score => _scoreCounter.Value;
+        public int PredictionsCount { get; private set; } = 3;
 
         private TetrisCell[,] _cells;
         private ITetrisShapeLibrary _shapeLibrary;
-        private ITetrisPredictionShapes _predictions;
         private ITetrisShape _currentShape;
         private TetrisCoords _shapeCoords = new TetrisCoords(0, 0);
         private List<TetrisCoords> _fallingCells = new List<TetrisCoords>();
@@ -46,7 +46,6 @@ namespace TetrisGameLogic
             Width = width;
             Height = height;
             _shapeLibrary = shapeLibrary;
-            _predictions = new TetrisPredictionShapes(_shapeLibrary);
             _cells = new TetrisCell[Height, Width];
             for (int row = 0; row < Height; row++)
             {
@@ -201,6 +200,11 @@ namespace TetrisGameLogic
                     }
                 }
             }
+        }
+
+        public List<ITetrisShape> GetPredictions()
+        {
+            return _shapeLibrary.GetPredictions(PredictionsCount);
         }
 
         private void PutNextShape()

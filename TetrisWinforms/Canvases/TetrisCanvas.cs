@@ -16,7 +16,7 @@ namespace TetrisWinforms.Canvases
         public const int HOR_SEPARATOR_HEIGHT = 10;
         public const int CELL_SEPARATOR_SIZE = 3;
         public const int SCORE_HEIGHT = 50;
-        public const int PREDICTION_HEIGHT = 80;
+        public const int PREDICTION_HEIGHT = 160;
         public int CellSize { get; private set; }
         private Graphics _graphics;
         
@@ -53,17 +53,18 @@ namespace TetrisWinforms.Canvases
 
             var r = _rightRectangle;
             _scoreRectangle = new Rectangle(r.Left + BORDER_WIDTH, r.Top + BORDER_HEIGHT, r.Width - BORDER_WIDTH * 2, SCORE_HEIGHT);
+
             _predictionRectangle = new Rectangle(
                 r.Left + BORDER_WIDTH, 
                 r.Top + BORDER_HEIGHT + _scoreRectangle.Height + HOR_SEPARATOR_HEIGHT,
                 r.Width - BORDER_WIDTH * 2, 
                 PREDICTION_HEIGHT);
-            _predictionCanvas = new TetrisPredictionCanvas(_predictionRectangle);
         }
 
         public void SetGraphics(Graphics graphics)
         {
             _graphics = graphics;
+            _predictionCanvas = new TetrisPredictionCanvas(_graphics, _predictionRectangle);
         }
 
         private Brush GetBrushByCell(TetrisCell tetrisCell)
@@ -118,7 +119,7 @@ namespace TetrisWinforms.Canvases
             }
 
             DrawScore(matrix.Score);
-            
+            _predictionCanvas.Draw(matrix.GetPredictions());
         }
 
         private void DrawScore(int score)

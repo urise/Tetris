@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TetrisGameLogic.TetrisShapes;
 
 namespace TetrisGameLogic
 {
@@ -14,5 +15,6 @@ namespace TetrisGameLogic
         void RemoveFullLines();
         bool IsEmpty();
         int Score { get; }
+        List<ITetrisShape> GetPredictions();
     }
 }

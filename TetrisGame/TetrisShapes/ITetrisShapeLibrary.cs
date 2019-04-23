@@ -8,6 +8,7 @@ namespace TetrisGameLogic.TetrisShapes
 {
     public interface ITetrisShapeLibrary
     {
-        ITetrisShape GetNextShape();
+        ITetrisShape GetNextShape(bool fromPrediction = true);
+        List<ITetrisShape> GetPredictions(int count);
     }
 }

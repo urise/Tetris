@@ -10,10 +10,14 @@ namespace TetrisWinforms.Canvases
     public abstract class TetrisBaseCanvas : ITetrisCanvas
     {
         protected Rectangle _fullRect;
+        protected Graphics _graphics;
+        protected TetrisCanvasOptions _options;
 
-        public TetrisBaseCanvas(Rectangle fullRect)
+        public TetrisBaseCanvas(Graphics graphics, Rectangle fullRect)
         {
+            _graphics = graphics;
             _fullRect = fullRect;
+            _options = TetrisCanvasOptions.Instance;
         }
 
     }

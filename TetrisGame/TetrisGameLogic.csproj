@@ -59,11 +59,9 @@
     <Compile Include="TetrisMatrix.cs" />
     <Compile Include="TetrisScore\ITetrisScoreCounter.cs" />
     <Compile Include="TetrisScore\TetrisScoreCounter.cs" />
-    <Compile Include="TetrisShapes\ITetrisPredictionShapes.cs" />
     <Compile Include="TetrisShapes\ITetrisShape.cs" />
     <Compile Include="TetrisShapes\ITetrisShapeLibrary.cs" />
     <Compile Include="TetrisShapes\ITetrisSingleShape.cs" />
-    <Compile Include="TetrisShapes\TetrisPredictionShapes.cs" />
     <Compile Include="TetrisShapes\TetrisSingleShape.cs" />
     <Compile Include="TetrisShapes\TetrisShapeLibrary.cs" />
     <Compile Include="TetrisShapes\TetrisShape.cs" />
