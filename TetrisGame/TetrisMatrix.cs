@@ -209,7 +209,7 @@ namespace TetrisGameLogic
 
         private void PutNextShape()
         {
-            _currentShape = _shapeLibrary.GetNextShape();
+            _currentShape = _shapeLibrary.GetNextShape().Clone();
             _shapeCoords.Set(0, Width / 2 - 2);
             var singleShape = _currentShape.GetCurrent();
             if (ShapeCanBePlaced(singleShape, _shapeCoords))

@@ -12,5 +12,6 @@ namespace TetrisGameLogic.TetrisShapes
         ITetrisSingleShape GetNext();
         ITetrisSingleShape GetCurrent();
         int SquareCount { get; }
+        ITetrisShape Clone();
     }
 }

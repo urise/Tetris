@@ -11,5 +11,6 @@ namespace TetrisGameLogic.TetrisShapes
         bool IsFull(int row, int col);
         int FullSize { get; }
         int SquareCount { get; }
+        ITetrisSingleShape Clone();
     }
 }

@@ -60,5 +60,14 @@ namespace TetrisGameLogic.TetrisShapes
         {
             return _shapes[(_currentIndex + 1) % _shapes.Length];
         }
+
+        public ITetrisShape Clone()
+        {
+            return new TetrisShape
+            {
+                _shapes = this._shapes.Select(s => s.Clone()).ToArray(),
+                _currentIndex = this._currentIndex
+            };
+        }
     }
 }

@@ -14,7 +14,9 @@ namespace TetrisGameLogic.TetrisShapes
         public int RealSizeVer { get; private set; }
         public int RealSizeHor { get; private set; }
         public int SquareCount { get; private set; }
-        
+
+        public TetrisSingleShape() { }
+
         public TetrisSingleShape(List<string> lines)
         {
             ValidateLines(lines);
@@ -30,6 +32,18 @@ namespace TetrisGameLogic.TetrisShapes
                     SquareCount += _cells[i, j] ? 1 : 0;
                 }
             }
+        }
+
+        public ITetrisSingleShape Clone()
+        {
+            return new TetrisSingleShape
+            {
+                _cells = (bool[,])this._cells.Clone(),
+                FullSize = this.FullSize,
+                RealSizeVer = this.RealSizeVer,
+                RealSizeHor = this.RealSizeHor,
+                SquareCount = this.SquareCount
+            };
         }
 
         private void ValidateLines(List<string> lines)
